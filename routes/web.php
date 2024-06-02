@@ -12,12 +12,6 @@ Route::get('/', function () {
 Route::get('/', function () {
     return view('home');
 });
-Route::get('index', [DBController::class,'index']);
-Route::get('add', [DBController::class,'add']);
-Route::post('addsave', [DBController::class,'addsave']);
-Route::get('edit/{nama}', [DBController::class,'edit']);
-Route::post('editsave', [DBController::class,'editsave']);
-Route::get('delete/{nama}', [DBController::class,'delete']);
 
 Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('actionlogin', [LoginController::class, 'actionlogin'])->name('actionlogin');
@@ -28,3 +22,9 @@ Route::get('actionlogout', [LoginController::class, 'actionlogout'])->name('acti
 //REGISTER
 Route::get('register', [RegisterController::class, 'register'])->name('register');
 Route::post('register/action', [RegisterController::class, 'actionregister'])->name('actionregister');
+Route::get('/history', [DBController::class,'history']);
+Route::get('/show/{id_table}', [DBController::class,'show']);
+Route::get('/new-table', [DBController::class,'newtable']);
+Route::post('/add-table', [DBController::class,'addtable']);
+Route::get('/new-input/{id_table}', [DBController::class,'newinput']);
+Route::post('/add-input/{id_table}', [DBController::class,'addinput']);

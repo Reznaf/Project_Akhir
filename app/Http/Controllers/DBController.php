@@ -7,51 +7,85 @@ use Illuminate\Support\Facades\DB;
 
 class DBController extends Controller
 {
-    public function index()
+    public function history()
     {
-        // mengambil data dari table obat
-        $obat = DB::table('obat')->get();
+        // mengambil data dari table obats
+        $id_table = DB::table('obats')->distinct()->get(['id_table']);
 
-        // mengirim data obat ke halaman index
-        return view('index', ['obat' => $obat]);
+        // mengirim data obats ke halaman index
+        return view('History', ['id_table' => $id_table]);
     }
 
-    public function add() {
-        return view('add');
+    public function show($id)
+    {
+        // mengambil data dari table obats
+        $table = DB::table('obats')->where('id_table', $id)->get();
+
+        // mengirim data obats ke halaman index
+        return view('Show', ['table' => $table]);
     }
 
-    public function addsave(Request $req) {
-        DB::table('obat')->insert([
+    public function newtable()
+    {
+        // mengambil data dari table obats
+        $id_table = DB::table('obats')->distinct()->get(['id_table']);
+
+        // mengirim data obats ke halaman index
+        return view('New-table', ['id_table' => $id_table]);
+    }
+
+    public function newinput($id)
+    {
+        // mengambil data dari table obats
+        $table = DB::table('obats')->where('id_table', $id)->get();
+
+        // mengirim data obats ke halaman inde
+        return view('New-input', ['id_table' => [$id, $table]]);
+    }
+
+    public function edittable($id)
+	{
+		// mengambil data mahasiwa berdasarkan nama yang dipilih
+		$obats = DB::table('obats')->where('id_table',$id)->get();
+		// mengirim data mahasiwa yang didapat ke view edit.blade.php
+		return view('edit',['obats' => $obats]);
+	}
+
+    public function addtable(Request $req) {
+        return redirect("/new-input/{$req->id_table}");
+    }
+
+    public function addinput($id, Request $req) {
+        DB::table('obats')->insert([
+            'id_table' => $id,
             'nama' => $req->nama,
             'kuantitas' => $req->kuantitas,
         ]);
-
-        //alihkan halaman ke halaman obat
-        return redirect('/add');
+        return redirect("/new-input/{$req->id_table}");
     }
-	public function edit($nama)
-	{
-		// mengambil data mahasiwa berdasarkan nama yang dipilih
-		$obat = DB::table('obat')->where('nama',$nama)->get();
-		// mengirim data mahasiwa yang didapat ke view edit.blade.php
-		return view('edit',['obat' => $obat]);
-	}
 
-	public function editsave(Request $req)
+	public function editinput(Request $req)
 	{
-		// update data obat
-		DB::table('obat')->where('nama',$req->nama)->update([
+		// update data obats
+		DB::table('obats')->where('nama',$req->nama)->update([
             'nama' => $req->nama,
             'kuantitas' => $req->kuantitas,
 		]);
-		// alihkan halaman data obat
-		return redirect('/index');
+		// alihkan halaman data obats
+		return redirect('/history');
 	}
 
-	public function delete($nama)
+    public function deletetable($id_table)
 	{
-		DB::table('obat')->where('nama', $nama)->delete();
+		DB::table('obats')->where('id_table', $id_table)->delete();
 
-		return redirect('/index');
+		return redirect('/history');
+	}
+
+	public function deleteinput($nama)
+	{
+		DB::table('obats')->where('nama', $nama)->delete();
+
+		return redirect('/history');
 	}
 }
